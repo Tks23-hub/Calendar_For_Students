@@ -58,9 +58,14 @@ async function GetAllCourses(req, res, next) {
   }
 
   // --- actual query ---
-  let Query = `SELECT * FROM courses ${wh} LIMIT ${
-    page * rowPerPage
-  }, ${rowPerPage}`;
+
+  let getAll = req.query.all === "true";
+  let Query = getAll
+    ? `SELECT * FROM courses ${wh} ORDER BY id`
+    : `SELECT * FROM courses ${wh} ORDER BY id LIMIT ${
+        page * rowPerPage
+      }, ${rowPerPage}`;
+
   req.courses_data = [];
   req.page = page;
   req.total_pages = Math.floor(total_rows / rowPerPage);
